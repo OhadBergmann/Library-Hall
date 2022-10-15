@@ -1,6 +1,7 @@
 @import "table.css";
 @import "add-form.css";
 @import "info-panel.css";
+@import "update-panel.css";
 
 * {
     box-sizing: border-box;

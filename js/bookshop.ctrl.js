@@ -53,15 +53,21 @@ function onReadInfo(el){
 }
 
 function onCloseInfo() {
-    document.querySelector('.info-panel').classList.add('hide-aside');
+    $('.info-panel').addClass('hide-aside');
 }
 
 
 
 function onUpdateBook(){
-    console.log('update')
+    const $elForm = $('form[name="form2"] .form-frame');
+    $elForm.removeClass('op-zero');
+    _toggleBookFormInputs($elForm);
 }
 
+function onCloseUpdateForm(){
+    console.log('test')
+    $('form[name="form2"] .form-frame').addClass('op-zero');
+}
 
 
 function onBookFormSubmition(e){
@@ -107,45 +113,37 @@ function onBookFormSubmition(e){
 
 }
 
-function onHideForm(){
-    const elForm = document.querySelector('.form-frame');
-    if(!elForm.classList.contains('op-zero')){
-        elForm.classList.add('op-zero');
-        _toggleBookFormInputs()
-    } 
-}
 
 function onOpenBookForm(e){
     e.preventDefault();
     
-    const elForm = document.querySelector('.form-frame');
-    if(elForm.classList.contains('op-zero')){
-        elForm.classList.remove('op-zero');
-        _toggleBookFormInputs()
+    const $elForm = $('form[name="form1"] .form-frame');
+    if($elForm.hasClass('op-zero')){
+        $elForm.removeClass('op-zero');
+        _toggleBookFormInputs($elForm);
     } 
     
 }
 
 function onCloseBookForm (e){
     e.preventDefault();
-
-    const elForm = document.querySelector('.form-frame');
-    if(!elForm.classList.contains('op-zero')){
-        elForm.classList.add('op-zero');
-        _toggleBookFormInputs()
+    console.log('onOpenBookForm')
+    const $elForm = $('.form-frame');
+    if(!$elForm.hasClass('.op-zero')){
+        $elForm.addClass('op-zero');
+        _toggleBookFormInputs($elForm);
     } 
 }
 
 
 
-function _toggleBookFormInputs(){
+function _toggleBookFormInputs($el){
     var elDOMs = [];
-    elDOMs = [...document.querySelectorAll('.form-frame input')];
-    elDOMs.push(document.querySelector('.nb-submit-btn'));
-    elDOMs.push(document.querySelector('.nb-cancel-btn'));
+    elDOMs = [...$el.find('input')];
+    elDOMs = elDOMs.concat([...$el.find('button')]);
 
-    elDOMs.forEach((el)=>{
-        el.disabled = !el.disabled;
+    elDOMs.forEach(($node)=>{
+        $node.disabled = !$node.disabled;
     });
 }
 
