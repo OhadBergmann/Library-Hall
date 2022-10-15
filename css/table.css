@@ -1,0 +1,116 @@
+
+.books-table{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10em;
+    margin-left: 10em;
+    height: 25em;
+    width: 75em;
+    max-height: 25em;
+}
+
+table {
+    border-collapse:collapse; 
+}
+
+tr *{
+    padding: 0.7em 1.7em 0.7em 1.7em ;
+    border: 3px rgb(77, 77, 77) solid;
+    background-color: rgb(207, 244, 246);
+    height: 2.5em;
+    padding: 0.5em;
+}
+
+
+
+tr.odd-row *{
+    background-color: rgb(177, 214, 218);
+}
+
+thead th{
+    text-align: center;
+    background-color: rgb(177, 214, 218);
+    font-size: 27px; 
+}
+
+thead th.actions{
+    background-color: #f0f0f0;
+    border-top: none;
+    border-right: none;
+   
+}
+
+tbody * {
+    text-align: left;
+    font-size: 20px; 
+}
+
+tr th{
+    text-align: center;
+    font-style: oblique;
+}
+
+tr td.content{
+    width: 25em;
+    height: 3.1em;
+}
+
+tr td.center-txt{
+    text-align: center;
+    width: 6.5em;
+}
+
+tr td.action-btn{
+    background-color: #f0f0f0;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 3.1em;
+}
+
+tr.odd-row  td.action-btn{
+    background-color: #aaa0877b;;
+}
+
+.action-btn button{
+
+    background-color: #d52010;
+    border-color: #bd0e0e;
+    font-family: 'Roboto, sans-serif';
+    color: #fff;
+    
+    height: 2.4em;
+    width: 6.5em;
+
+    line-height: 0.05em;
+    border-radius: .6em;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.5s;
+    text-align: center;
+    
+}
+
+.action-btn button:hover{
+    background-color: #fcfab6;
+}
+
+.action-btn button.blue-btn{
+    background-color: #3e10d5;
+    border-color: #0064e6;   
+}
+
+.action-btn button.blue-btn:hover{
+    background-color: #b6eafc;
+}
+
+
+.action-btn button.orange-btn{
+    background-color: #e8a617;
+    border-color: #ee7700;  
+}
+
+.action-btn button.orange-btn:hover{
+    background-color: #fee153;
+}
+
