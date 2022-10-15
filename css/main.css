@@ -1,0 +1,122 @@
+@import "table.css";
+@import "add-form.css";
+@import "info-panel.css";
+
+* {
+    box-sizing: border-box;
+}
+
+body{
+    color: #333;
+    background-color: #f0f0f0;
+    overflow-x: hidden;
+}
+
+header{
+    color: #fff;
+    background: #4c394e;
+    position: fixed;
+    height: 5em;
+    width: 99.7%;
+    top: 0;
+    right: 0;
+
+    border-bottom-left-radius: 100%;
+}
+
+aside{
+    color: #fff;
+    background: #4c394e;
+    position: fixed;
+    height: 99.7%;
+    width:  5em ;
+    top: 0;
+    left: 0;
+
+    border-top-right-radius: 100%;
+}
+
+div.decor{
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0);
+    border: 2.3em #4c394e solid;
+}
+
+div.decor.outer-ring{
+    height: 27em;
+    width: 27em;
+}
+
+div.decor.middle-ring{
+    height: 18em;
+    width: 18em;
+}
+
+div.decor.inner-ring{
+    height: 9em;
+    width: 9em;
+}
+
+.edit-section{
+    display: flex;
+    flex-direction: row;
+    height: 30em;
+    margin-top: 2em;
+}
+
+.edit-section form{
+    height: 30em;
+    width: 40em;
+    margin-left: 10em;
+}
+
+.edit-section .page-nav{
+    height: 7em;
+    width: 18em;
+    margin-left: 0em;
+}
+
+.btn{
+    background-color: #10bbd5;
+    border-color: #0ea6bd;
+    font-family: 'Roboto, sans-serif';
+    color: #fff;
+    line-height: 1.9rem;
+    height: 2.4rem;
+    border-radius: .6rem;
+    cursor: pointer;
+    transition: color 0.5s;    
+}
+
+.btn:hover{
+    background-color: #b6f3fc;
+}
+
+label.current-page{
+    background-color: #10bbd5;
+    border-color: #0ea6bd;
+    font-family: 'Roboto, sans-serif';
+    color: #fff;
+
+    padding: 5px 15px 5px 15px;
+    font-size: 16px;
+    border-radius: .6rem;
+    border-color: 2px solid #0ea6bd;
+    box-shadow: 1px 1px 1px 1px #000000;
+}
+
+.disabled-btn{
+    background-color: #606060;
+    border-color: #282828;
+    font-family: 'Roboto, sans-serif';
+    color: #fff;
+}
+
+.disabled-btn:hover{
+    background-color: #606060;
+    cursor: default;
+}
