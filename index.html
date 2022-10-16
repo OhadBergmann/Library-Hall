@@ -52,20 +52,19 @@
             <label class="current-page">1</label>
             <button class="btn next" onclick="onTablePageChange(true)">Next Page &#8594</button>
         </div>
-        <form name="form2" onsubmit="onUpdateFormSubmition(event)">
+        <form name="form2" onsubmit="onUpdateFormSubmition(event, this)">
             <div class="form-frame op-zero" >
                 <label class="update-instructions">click on the currect button to select what data you wish to update</label>
-                <label class="nb-id">I.D:</label>
-                <input class="nb-id" type="number" placeholder="Enter the book I.D" disabled/>
-                <input class="nb-id-auto" type="checkbox" checked disabled/>
-                <label class="nb-name">NAME:</label>
-                <input class="nb-name" type="text" placeholder="Enter the book Name" disabled/>
-                <label class="nb-price">PRICE:</label>
-                <input class="nb-price" type="number" placeholder="Enter the book price" disabled/>
-                <label class="nb-img-url">URL:</label>
-                <input class="nb-img-url" type="text" placeholder="https://example.png" disabled/>
-                <label class="nb-info">DETAILS:</label>
-                <input class="nb-info" type="text" placeholder="Tell as about the book" disabled/>
+                <div class="info-buttons-container">
+                    <button class="info-btn btn-up-id" data-type="id" onclick="selectToUpdate(event, this)" disabled>I.D:</button>
+                    <button class="info-btn btn-up-name" data-type="name" onclick="selectToUpdate(event, this)" disabled>NAME:</button>
+                    <button class="info-btn btn-up-price" data-type="price" onclick="selectToUpdate(event, this)" disabled>PRICE:</button>
+                    <button class="info-btn btn-up-img-url" data-type="img-url" onclick="selectToUpdate(event, this)" disabled>URL:</button>
+                    <button class="info-btn btn-up-info" data-type="details" onclick="selectToUpdate(event, this)" disabled>DETAILS:</button>
+                </div>
+                <div class="update-input-container">
+                </div>
+                
                 <button class="nb-btn nb-submit-btn" type="submit" disabled>Submit</button>
                 <button class="nb-btn nb-cancel-btn" type="button" onclick="onCloseUpdateForm(event)" disabled>Cancel</button>
             </div>

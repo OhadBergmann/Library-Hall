@@ -1,5 +1,9 @@
 'use strict'
 
+
+var gCurrBookID = -1;
+
+
 function onInit(){
     renderBooks();
 }
@@ -58,20 +62,64 @@ function onCloseInfo() {
 
 
 
-function onUpdateBook(){
+function onUpdateBook(el){
+    gCurrBookID = $(el).closest('tr').children('*').first().text()
+    
     const $elForm = $('form[name="form2"] .form-frame');
     $elForm.removeClass('op-zero');
     _toggleBookFormInputs($elForm);
+
 }
 
 function onCloseUpdateForm(){
-    console.log('test')
-    $('form[name="form2"] .form-frame').addClass('op-zero');
+    gCurrBookID = -1;
+    const $elForm = $('form[name="form2"] .form-frame');
+    $elForm.addClass('op-zero');
+    _toggleBookFormInputs($elForm);
 }
 
+function selectToUpdate(ev, el) {
+    ev.preventDefault();
+    const $elCurr = $(el)
 
-function onBookFormSubmition(e){
-    e.preventDefault();
+    const buttons = $elCurr.closest('div').children('button').toArray();
+    buttons.forEach((btn)=>{
+        if($(btn).hasClass('active')) $(btn).removeClass('active');
+    });
+    $elCurr.addClass('active');
+
+    const $container = $('.update-input-container');
+    switch(el.dataset.type){
+        case 'id':
+            $container.html(`<input class="update-input" type="number" placeholder="please insert the new id"
+            "/>`);
+            break;
+        case 'name':
+            $container.html(`<input class="update-input" type="text" placeholder="please insert the name"
+            "/>`);
+            break;
+        case 'price':
+            $container.html(`<input class="update-input" type="number" placeholder="please insert the new price"
+            "/>`);
+            break;
+        case 'img-url':
+            $container.html(`<input class="update-input" type="text" placeholder="please insert the img-url"
+            "/>`);
+            break;
+        case 'details':
+            $container.html(`<textarea class="update-input" rows="4" cols="50" placeholder="please insert the book details"
+            "/>`);
+            break;
+    }
+}
+
+function onUpdateFormSubmition(ev,el){
+    ev.preventDefault();
+
+}
+
+function onBookFormSubmition(ev){
+    ev.preventDefault();
 
     var formInfo = {};
     var str = '';
@@ -114,8 +162,8 @@ function onBookFormSubmition(e){
 }
 
 
-function onOpenBookForm(e){
-    e.preventDefault();
+function onOpenBookForm(ev){
+    ev.preventDefault();
     
     const $elForm = $('form[name="form1"] .form-frame');
     if($elForm.hasClass('op-zero')){
@@ -125,9 +173,8 @@ function onOpenBookForm(e){
     
 }
 
-function onCloseBookForm (e){
-    e.preventDefault();
-    console.log('onOpenBookForm')
+function onCloseBookForm (ev){
+    ev.preventDefault();
     const $elForm = $('.form-frame');
     if(!$elForm.hasClass('.op-zero')){
         $elForm.addClass('op-zero');
@@ -141,7 +188,6 @@ function _toggleBookFormInputs($el){
     var elDOMs = [];
     elDOMs = [...$el.find('input')];
     elDOMs = elDOMs.concat([...$el.find('button')]);
-
     elDOMs.forEach(($node)=>{
         $node.disabled = !$node.disabled;
     });

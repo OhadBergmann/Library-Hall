@@ -9,3 +9,47 @@
     font-size: 1.5em;
     text-align: center;
 }
+
+.info-btn{
+    display: inline-block;
+    margin-top: 5em;
+    margin-left: 1em;
+
+    height: 1.6rem;
+    width: 5.5em;
+
+    background-color: #d510b4;
+    border-color: #bd0e2b;
+    font-family: 'Roboto, sans-serif';
+    color: rgb(0, 0, 0);
+    
+    border-radius: .3rem;
+    cursor: pointer;
+    transition: color 0.5s; 
+} 
+
+.info-btn:hover{
+    background-color: #e7ecba;
+    border-color: #b97a84;
+}
+
+.info-btn:active, .active{
+    background-color: #2f3738;
+    border-color: #0ea6bd;
+    color: #fff;
+
+    box-shadow: none;
+}
+
+input.update-input{
+    background-color: #e7ecba !important;
+    top: 11em;
+}
+
+textarea.update-input{
+    background-color: #e7ecba !important;
+    position: absolute;
+    top: 11em;
+    left: 50%;
+    transform: translate(-50%);
+}
