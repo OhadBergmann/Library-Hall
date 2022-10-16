@@ -100,7 +100,11 @@ span.book-info-txt{
     padding-bottom: 20px;
 }
 
-
+.book-info-rate span{
+    position: absolute;
+    bottom: 1em;
+    left: 3em;
+}
 
 .x-btn{
     position: absolute;

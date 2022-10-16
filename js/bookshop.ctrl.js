@@ -46,14 +46,15 @@ function onDeleteBook(el){
 function onReadInfo(el){
     const id = el.parentElement.parentElement.firstElementChild.innerText.trim();
     const book = getBookByID(id);
-    document.querySelector('.info-panel').classList.remove('hide-aside');
-    document.querySelector('.book-info-name').innerText = book.name;
-    document.querySelector('.book-info-id').innerText = 'Book ID: ' + book.id;
-    document.querySelector('.book-info-price').innerText = 'Price: ' + book.price;
-    //document.querySelector('.book-info-rate .curr-rate').innerText = book.rate;
-    //document.getElementById('book-cover-img')['src'] ='./' + book.imgUrl + ''; 
-    document.querySelector('.info-panel .first-letter').innerText = book.info.charAt(0);
-    document.querySelector('.info-panel .book-info-txt').innerText = book.info.substring(1);
+
+    $('.info-panel').removeClass('hide-aside');
+    $('.book-info-name').text(book.name);
+    $('.book-info-id').text('Book ID: ' + book.id);
+    $('.book-info-price').text('Price: ' + book.price);
+    if(Boolean(book.rate)) $('.book-info-rate span').text(book.rate);
+    !book.imgUrl? $('.book-cover').attr('src','img/default-cover.png') : $('.book-cover').attr('src',book.imgUrl);
+    $('.info-panel .first-letter').text(book.info.charAt(0));
+    $('.info-panel .book-info-txt').text(book.info.substring(1));
 }
 
 function onCloseInfo() {
@@ -116,6 +117,16 @@ function selectToUpdate(ev, el) {
 function onUpdateFormSubmition(ev,el){
     ev.preventDefault();
 
+    const currData = {};
+    if($('.update-input-container').children('*').length < 1 || !$('.update-input-container > ').val()) return;
+
+    currData.id = gCurrBookID;
+    currData.type = $(el).find('button.active').data().type;
+    currData.updateValue = $('.update-input-container > ').val();
+   
+    updateBook(currData);
+    onCloseUpdateForm();
+    renderBooks();
 }
 
 function onBookFormSubmition(ev){

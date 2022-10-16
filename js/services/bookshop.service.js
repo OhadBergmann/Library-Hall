@@ -25,8 +25,6 @@ function getBooks(){
     books[0] = []
     books[0][0] = gBooks[0];
 
-    //convert gBooks array to books ("array of Arrays"), each inner array of books  will be with lenght size 
-    //(of book item) that is needed to display on each page;
     for (let i = 1; i < gBooks.length; i++) {
         if(i%gDisplayAmount !== 0){
             books[count][i%gDisplayAmount] = gBooks[i];
@@ -72,7 +70,31 @@ function removeBook(id){
 }
 
 
+function updateBook(data){
+    const currBook = getBookByID(data.id);
+    console.log(gBooks);
+    switch(data.type){
+        case 'id':
+            currBook.id = +data.updateValue;
+            break;
+        case 'name':
+            currBook.name = data.updateValue;
+            break;
+        case 'price':
+            currBook.price = +data.updateValue + '$';
+            break;
+        case 'img-url':
+            currBook.imgUrl = data.updateValue;
+            break;
+        case 'details':
+            currBook.info = data.updateValue;
+            break;
+    }
 
+    console.log(currBook);
+    console.log(gBooks);
+    saveToStorage(BOOKS_KEY,gBooks);
+}
 
 function getDisplayAmount(){
     return gDisplayAmount;
