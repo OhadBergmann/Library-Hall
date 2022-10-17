@@ -22,12 +22,11 @@ function renderBooks(){
 function onTablePageChange (isForward){
     var books = getBooks();
     var currPageNum = getCurrentPageNum();
-    const lastPage = +$('.current-page').text(); 
     
-    if(isForward && lastPage + 1 <= books.length){
+    if(isForward && currPageNum + 1 < Math.ceil([].concat.apply([], books).length/getDisplayAmount()) ){
         currPageNum++;
         setCurrentPageNum(currPageNum);
-    } else if (lastPage - 1 >= 0){
+    } else if (!isForward && currPageNum - 1 >= 0){
         currPageNum--;
         setCurrentPageNum(currPageNum);
     }
@@ -174,15 +173,15 @@ function onBookFormSubmition(ev){
     var formInfo = {};
     var str = '';
 
-    if( document.querySelector('input.nb-id-auto').checked || !document.querySelector('input.nb-id').value){
+    if( $('input.nb-id-auto').is(':checked') || !$('input.nb-id').val()){
         formInfo.id = getNewBookID();
     }
     else {
-        formInfo.id = document.querySelector('input.nb-id').value;
+        formInfo.id = $('input.nb-id').val();
     }
     
-    formInfo.name = document.querySelector('input.nb-name').value;
-    formInfo.price = document.querySelector('input.nb-price').value;
+    formInfo.name = $('input.nb-name').val();
+    formInfo.price = $('input.nb-price').val();
 
     if(!formInfo.name){  
         alert('A new book must come\'s with a name');
@@ -192,19 +191,22 @@ function onBookFormSubmition(ev){
         return;
     }
 
-    formInfo.imgUrl = document.querySelector('input.nb-img-url').value;
-    formInfo.info = document.querySelector('input.nb-info').value;
+    if(formInfo.price > 1000) formInfo.price = 1000;
+
+    formInfo.imgUrl = $('input.nb-img-url').val();
+    formInfo.info = $('input.nb-info').val();
 
     str = `are you sure you want to submit: \n \" ${formInfo.name} \" i.d number: ${formInfo.id} \n 
     at thr price of ${formInfo.price} \n with the falling picture: ${formInfo.imgUrl} ?`;
 
     if(confirm(str)){
         addNewBook(formInfo);
-        document.querySelector('input.nb-id').value = '';
-        document.querySelector('input.nb-name').value = '';
-        document.querySelector('input.nb-price').value = '';
-        document.querySelector('input.nb-img-url').value = '';
-        document.querySelector('input.nb-info').value = '';
+        $('input.nb-id').val('');
+        $('input.nb-name').val('');
+        $('input.nb-price').val('');
+        $('input.nb-img-url').val('');
+        $('input.nb-info').val('');
+        _setPagesDisplay(getCurrentPageNum());
         renderBooks();
 
     }
@@ -233,16 +235,16 @@ function onCloseBookForm (ev){
 }
 
 function _setPagesDisplay(currPageNumber){
-    var availablePages;
+    var availableBooks;
     var currValue;
     var $elCurr;
 
     if(haveCurrentFilter()){
-        availablePages = [].concat.apply([],getBooksFilterBy()).map((book,idx)=>{
+        availableBooks = [].concat.apply([],getBooksFilterBy()).map((book,idx)=>{
             return idx + 1;
         });
     } else { 
-        availablePages = [].concat.apply([],getBooks()).map((book,idx)=>{
+        availableBooks = [].concat.apply([],getBooks()).map((book,idx)=>{
             return idx + 1;
         });
     }
@@ -254,18 +256,18 @@ function _setPagesDisplay(currPageNumber){
     
     for (let i = 0; i < 5; i++) {
        
-        currValue = ((currPageNumber + 1) - availablePages[i])
-        console.log(currValue);
+        currValue = ((currPageNumber + 1) - availableBooks[i])
+
         if(currValue > 0 && currValue < 5){
             $elCurr = $(`.pseudo-page-prev-${currValue}`);
             $elCurr.show();
-            $elCurr.text(availablePages[i]);
+            $elCurr.text(availableBooks[i]);
         } else if(currValue === 0){
             $('.edit-section .current-page').text(currPageNumber + 1);
-        } else if(currValue > -5) {
+        } else if(currValue > -5 && availableBooks[i] <= Math.ceil(availableBooks.length/getDisplayAmount())) {
             $elCurr = $(`.pseudo-page-next-${Math.abs(currValue)}`);
             $elCurr.show();
-            $elCurr.text(availablePages[i]);
+            $elCurr.text(availableBooks[i]);
         }
     }
 }
@@ -369,7 +371,7 @@ function _changePageProgressionBTNs (){
                 $('.btn.next').removeClass('disabled-btn');
             }
         }
-    } else if((currPageNum + 1) * getDisplayAmount() <= booksLength){
+    } else if( currPageNum + 1 < Math.ceil(booksLength / getDisplayAmount())){
         $('.btn.next').prop( 'disabled', false );
         $('.btn.next').removeClass('disabled-btn');
         if( $('.btn.prev').hasClass('disabled-btn')){

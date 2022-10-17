@@ -125,6 +125,13 @@ label.current-page{
     border-radius: .6rem;
 }
 
+.page-nav .pseudo-page{
+    background-color: #21a0b4;
+    border: 2px solid #0ea6bd;
+    padding: 0.5em;
+    border-radius: .6rem;
+}
+
 .page-nav .btn{
     transform: translateY(-0.1em);
 }
