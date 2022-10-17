@@ -41,11 +41,20 @@ function getBooks(){
 
 function getBooksFilterBy(){
     var books = [];
+    var filteredBooks = [];
     var count = 0;
-
-    const filteredBooks = gBooks.filter(book => +book.price.substring(0,book.price.length -1) <= +gCurrFilter.maxPrice);
-
+    
+    if(Boolean(gCurrFilter.maxPrice) && Boolean(gCurrFilter.minRate)){
+        filteredBooks = gBooks.filter(book => +book.price.substring(0,book.price.length -1) <= +gCurrFilter.maxPrice && 
+        +book.rate >= +gCurrFilter.minRate);
+    } else if(!Boolean(gCurrFilter.maxPrice)){
+        filteredBooks = gBooks.filter(book => +book.rate >= +gCurrFilter.minRate);
+    } else if(!Boolean(gCurrFilter.minRate)){
+        filteredBooks = gBooks.filter(book => +book.price.substring(0,book.price.length -1) <= +gCurrFilter.maxPrice);
+    }
+    
     if(filteredBooks.length < 1) return filteredBooks;
+
     books[0] = [];
     books[0][0] = filteredBooks[0];
 
@@ -63,7 +72,9 @@ function getBooksFilterBy(){
 }
 
 function setCurrentFilter (obj){
-    gCurrFilter = obj;
+    if(!haveCurrentFilter()) gCurrFilter = obj;
+    if(Boolean(obj.maxPrice)) gCurrFilter.maxPrice = obj.maxPrice;    
+    if(Boolean(obj.minRate)) gCurrFilter.minRate = obj.minRate;
 }
 
 function haveCurrentFilter (){

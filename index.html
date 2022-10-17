@@ -16,9 +16,14 @@
     <section class="filter-section">
         <label class="max-price">
             Max Price:
-            <input type="range" min="0" max="1000" value="1000" class="filter-Price-range" 
+            <input type="range" min="0" max="1000" value="1000" class="filter-price-range" 
             onchange="onSetFilterBy({maxPrice: this.value})">
             <label class="filter-price-value">1000$</label>
+        </label>
+        <label class="min-rate">
+            Min Rate:
+            <input type="range" min="0" max="10" value="0" class="filter-rate-range" 
+            onchange="onSetFilterBy({minRate: this.value})">
         </label>
     </section>
     <section class="books-table">

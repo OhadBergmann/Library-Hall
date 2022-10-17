@@ -43,7 +43,9 @@ function onDeleteBook(el){
 
 
 function onSetFilterBy(obj){
-    $('label.filter-price-value').text(obj.maxPrice + '$')
+    if(Boolean(obj.maxPrice)) {
+        $('label.filter-price-value').text(obj.maxPrice + '$');
+    }
     setCurrentFilter(obj);
     renderBooks();
 }
@@ -212,8 +214,10 @@ function onCloseBookForm (ev){
 
 function _toggleBookFormInputs($el){
     var elDOMs = [];
+
     elDOMs = [...$el.find('input')];
     elDOMs = elDOMs.concat([...$el.find('button')]);
+
     elDOMs.forEach(($node)=>{
         $node.disabled = !$node.disabled;
     });
