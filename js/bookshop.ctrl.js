@@ -6,6 +6,7 @@ var gDirction = {name: true,price: true};
 
 function onInit(){
     _loadFromQueryParams();
+    _setPagesDisplay(getCurrentPageNum())
     renderBooks();
 }
 
@@ -31,7 +32,7 @@ function onTablePageChange (isForward){
         setCurrentPageNum(currPageNum);
     }
 
-    $('.current-page').text(currPageNum + 1);
+    _setPagesDisplay(currPageNum);
     renderBooks();
 }
 
@@ -116,7 +117,7 @@ function onCloseUpdateForm(ev){
     _toggleBookFormInputs($elForm);
 }
 
-function selectToUpdate(ev, el) {
+function onSelectToUpdate(ev, el) {
     ev.preventDefault();
     const $elCurr = $(el)
 
@@ -229,6 +230,44 @@ function onCloseBookForm (ev){
         $elForm.addClass('op-zero');
         _toggleBookFormInputs($elForm);
     } 
+}
+
+function _setPagesDisplay(currPageNumber){
+    var availablePages;
+    var currValue;
+    var $elCurr;
+
+    if(haveCurrentFilter()){
+        availablePages = [].concat.apply([],getBooksFilterBy()).map((book,idx)=>{
+            return idx + 1;
+        });
+    } else { 
+        availablePages = [].concat.apply([],getBooks()).map((book,idx)=>{
+            return idx + 1;
+        });
+    }
+
+    for(let i = 0; i < 5; i++){
+        $(`.pseudo-page-prev-${i}`).hide()
+        $(`.pseudo-page-next-${i}`).hide()
+    }
+    
+    for (let i = 0; i < 5; i++) {
+       
+        currValue = ((currPageNumber + 1) - availablePages[i])
+        console.log(currValue);
+        if(currValue > 0 && currValue < 5){
+            $elCurr = $(`.pseudo-page-prev-${currValue}`);
+            $elCurr.show();
+            $elCurr.text(availablePages[i]);
+        } else if(currValue === 0){
+            $('.edit-section .current-page').text(currPageNumber + 1);
+        } else if(currValue > -5) {
+            $elCurr = $(`.pseudo-page-next-${Math.abs(currValue)}`);
+            $elCurr.show();
+            $elCurr.text(availablePages[i]);
+        }
+    }
 }
 
 function _loadFromQueryParams(){

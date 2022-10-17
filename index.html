@@ -65,18 +65,26 @@
         </form>
         <div class="page-nav">
             <button class="btn prev disabled-btn" onclick="onTablePageChange(false)">&#8592</button>
+            <span class="pseudo-page-prev-4" style="display: none;"></span>
+            <span class="pseudo-page-prev-3" style="display: none;"></span>
+            <span class="pseudo-page-prev-2" style="display: none;"></span>
+            <span class="pseudo-page-prev-1" style="display: none;"></span>
             <span class="current-page">1</span>
+            <span class="pseudo-page-next-1" style="display: none;">2</span>
+            <span class="pseudo-page-next-2" style="display: none;">3</span>
+            <span class="pseudo-page-next-3" style="display: none;">4</span>
+            <span class="pseudo-page-next-4" style="display: none;">5</span>
             <button class="btn next" onclick="onTablePageChange(true)">&#8594</button>
         </div>
         <form name="form2" onsubmit="onUpdateFormSubmition(event, this)">
             <div class="form-frame op-zero" >
                 <label class="update-instructions">click on the currect button to select what data you wish to update</label>
                 <div class="info-buttons-container">
-                    <button class="info-btn btn-up-id" data-type="id" onclick="selectToUpdate(event, this)" disabled>I.D:</button>
-                    <button class="info-btn btn-up-name" data-type="name" onclick="selectToUpdate(event, this)" disabled>NAME:</button>
-                    <button class="info-btn btn-up-price" data-type="price" onclick="selectToUpdate(event, this)" disabled>PRICE:</button>
-                    <button class="info-btn btn-up-img-url" data-type="img-url" onclick="selectToUpdate(event, this)" disabled>URL:</button>
-                    <button class="info-btn btn-up-info" data-type="details" onclick="selectToUpdate(event, this)" disabled>DETAILS:</button>
+                    <button class="info-btn btn-up-id" data-type="id" onclick="onSelectToUpdate(event, this)" disabled>I.D:</button>
+                    <button class="info-btn btn-up-name" data-type="name" onclick="onSelectToUpdate(event, this)" disabled>NAME:</button>
+                    <button class="info-btn btn-up-price" data-type="price" onclick="onSelectToUpdate(event, this)" disabled>PRICE:</button>
+                    <button class="info-btn btn-up-img-url" data-type="img-url" onclick="onSelectToUpdate(event, this)" disabled>URL:</button>
+                    <button class="info-btn btn-up-info" data-type="details" onclick="onSelectToUpdate(event, this)" disabled>DETAILS:</button>
                 </div>
                 <div class="update-input-container">
                 </div>
