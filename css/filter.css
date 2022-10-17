@@ -25,6 +25,14 @@
     position: absolute;
     height: 1.5em;
     width: 3em;
-    left: 50%;
-    transform: translate(50%, 1.5em);
+    left: 40%;
+    transform: translate(50%, 0.3em);
+}
+
+.filter-section label.filter-rate-value{
+    position: absolute;
+    height: 1.5em;
+    width: 3em;
+    left: 22%;
+    transform: translate(50%, 0.3em);
 }

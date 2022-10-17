@@ -39,11 +39,18 @@ function getBooks(){
     return books;
 }
 
+function getBookslength(){
+
+}
 function getBooksFilterBy(){
     var books = [];
     var filteredBooks = [];
     var count = 0;
     
+    !storageHasData(BOOKS_KEY)? _createDefaultBooks() : gBooks = loadFromStorage(BOOKS_KEY);
+    gBookId = loadFromStorage(BOOKSID_KEY);
+    
+
     if(Boolean(gCurrFilter.maxPrice) && Boolean(gCurrFilter.minRate)){
         filteredBooks = gBooks.filter(book => +book.price.substring(0,book.price.length -1) <= +gCurrFilter.maxPrice && 
         +book.rate >= +gCurrFilter.minRate);
@@ -77,8 +84,13 @@ function setCurrentFilter (obj){
     if(Boolean(obj.minRate)) gCurrFilter.minRate = obj.minRate;
 }
 
+function getFilter() {
+    var filter = gCurrFilter;
+    return filter;
+}
+
 function haveCurrentFilter (){
-     return !gCurrFilter ? false: true
+     return !gCurrFilter ? false : true
 }
 
 function addNewBook (obj){

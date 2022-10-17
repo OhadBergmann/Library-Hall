@@ -4,13 +4,14 @@
 var gCurrBookID = -1;
 
 function onInit(){
+    _loadFromQueryParams();
     renderBooks();
 }
 
 
 
 function renderBooks(){
-    document.querySelector('.books-table').innerHTML = _generateTableHTML();
+    $('.books-table').html(_generateTableHTML());
     _changePageProgressionBTNs();
 }
 
@@ -43,10 +44,15 @@ function onDeleteBook(el){
 
 
 function onSetFilterBy(obj){
+
     if(Boolean(obj.maxPrice)) {
         $('label.filter-price-value').text(obj.maxPrice + '$');
+    } else if(Boolean(obj.minRate)) {
+        $('label.filter-rate-value').text(obj.minRate)
     }
+
     setCurrentFilter(obj);
+    _setQueryParams();
     renderBooks();
 }
 
@@ -210,7 +216,39 @@ function onCloseBookForm (ev){
     } 
 }
 
+function _loadFromQueryParams(){
+    const paramsStr = new URLSearchParams(window.location.search)
+    const filter = {
+        maxPrice: +paramsStr.get('maxPrice') || 1000,
+        minRate: +paramsStr.get('minRate') || 0
+    }
 
+    if (!filter.maxPrice && !filter.minRate){
+        renderBooks();
+        _changePageProgressionBTNs ();
+        return;
+    }
+
+    if(Boolean(filter.maxPrice)) {
+        $('label.filter-price-value').text(filter.maxPrice + '$');
+        $('.max-price input').val(filter.maxPrice);
+    }
+    
+    if(Boolean(filter.minRate)) {
+        $('label.filter-rate-value').text(filter.minRate)
+        $('.min-rate input').val(filter.minRate);
+    }
+
+    setCurrentFilter(filter);
+    renderBooks();
+}
+
+function  _setQueryParams() {
+    const filter = getFilter();
+    const paramsStr = `?maxPrice=${filter.maxPrice}&minRate=${filter.minRate}`;
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + paramsStr;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+}
 
 function _toggleBookFormInputs($el){
     var elDOMs = [];
@@ -233,26 +271,31 @@ function _checkOddNum(num){
 
 function _changePageProgressionBTNs (){
     
-    var elCurr = document.querySelector('.btn.prev');
-    var booksLength = getBooks().length;
+
+    var booksLength = haveCurrentFilter() ? [].concat.apply([],getBooksFilterBy()).length : [].concat.apply([],getBooks()).length;
     const currPageNum = getCurrentPageNum();
 
     if(currPageNum === 0){
-        elCurr.disabled = true;
-        elCurr.classList.add('disabled-btn');
-    } else if(elCurr.disabled){
-        elCurr.disabled = false;
-        elCurr.classList.remove('disabled-btn');
-    }
-
-    elCurr = document.querySelector('.btn.next');
-    
-    if(currPageNum === booksLength -1){
-        elCurr.disabled = true;
-        elCurr.classList.add('disabled-btn');
-    } else if(elCurr.disabled){
-        elCurr.disabled = false;
-        elCurr.classList.remove('disabled-btn');
+        $('.btn.prev').prop( 'disabled', true );
+        $('.btn.prev').addClass('disabled-btn');
+        if(booksLength <= getDisplayAmount()){
+            $('.btn.next').prop( 'disabled', true );
+            $('.btn.next').addClass('disabled-btn');
+        }
+    } else if((currPageNum + 1) * getDisplayAmount() <= booksLength -1){
+        $('.btn.next').prop( 'disabled', true );
+        $('.btn.next').addClass('disabled-btn');
+        if( $('.btn.prev').hasClass('disabled-btn')){
+            $('.btn.prev').prop( 'disabled', false );
+            $('.btn.prev').removeClass('disabled-btn');
+        }
+    } else {
+        $('.btn.next').prop( 'disabled', false );
+        $('.btn.next').removeClass('disabled-btn');
+        if( $('.btn.prev').hasClass('disabled-btn')){
+            $('.btn.prev').prop( 'disabled', false );
+            $('.btn.prev').removeClass('disabled-btn');
+        }
     }
 }
 
