@@ -22,7 +22,9 @@ tr *{
     padding: 0.5em;
 }
 
-
+th.table-pseudo-btn:hover{
+    background-color: rgb(239, 245, 205);
+}
 
 tr.odd-row *{
     background-color: rgb(177, 214, 218);

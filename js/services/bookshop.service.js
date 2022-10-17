@@ -11,6 +11,7 @@ var gViewPreference;
 var gPageNum = 0;
 var gDisplayAmount = 6;
 var gCurrFilter;
+var gInfoPanelStatus;
 
 if(gDisplayAmount > 6){ gDisplayAmount = 6;}
 
@@ -39,9 +40,6 @@ function getBooks(){
     return books;
 }
 
-function getBookslength(){
-
-}
 function getBooksFilterBy(){
     var books = [];
     var filteredBooks = [];
@@ -76,6 +74,33 @@ function getBooksFilterBy(){
     }
 
     return books;
+}
+
+
+function sortBooks(sortingFactor, direction){
+
+    switch(sortingFactor){
+        case 'name':
+            if(direction){
+                gBooks.sort((bookA,bookB) => {return bookA.name.charCodeAt(0) 
+                    - bookB.name.charCodeAt(0)});
+            } else {
+                gBooks.sort((bookA,bookB) => {return bookB.name.charCodeAt(0) 
+                    - bookA.name.charCodeAt(0)});
+            }
+            break;
+        case 'price':
+            if(direction){
+                gBooks.sort((bookA,bookB) => {return +bookA.price.substring(0,bookA.price.length -1) 
+                    - +bookB.price.substring(0,bookB.price.length -1)});
+            } else {
+                gBooks.sort((bookA,bookB) => {return +bookB.price.substring(0,bookB.price.length -1) 
+                    - +bookA.price.substring(0,bookA.price.length -1)});
+            }
+            break;
+    }
+
+    saveToStorage(BOOKS_KEY, gBooks);
 }
 
 function setCurrentFilter (obj){
@@ -164,13 +189,24 @@ function getDisplayAmount(){
     return gDisplayAmount;
 }
 
-
-
 function getUserPref(){
     return gViewPreference;
 }
 
+function setInfoPanelStatus (obj){
+    gInfoPanelStatus = obj;
+}
 
+function getInfoPanelStatus() {
+    if(!Boolean(gInfoPanelStatus)){
+        return null;
+    }
+    
+    const status = {};
+    status.isOpen = gInfoPanelStatus.isOpen;
+    status.bookId = gInfoPanelStatus.bookId;
+    return status;
+}
 
 function getCurrentPageNum(){
     return gPageNum;

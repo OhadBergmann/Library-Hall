@@ -2,6 +2,7 @@
 
 
 var gCurrBookID = -1;
+var gDirction = {name: true,price: true};
 
 function onInit(){
     _loadFromQueryParams();
@@ -56,10 +57,17 @@ function onSetFilterBy(obj){
     renderBooks();
 }
 
-
+function onSortBooks(sortingFactor) {
+    sortBooks(sortingFactor,gDirction[sortingFactor]);
+    gDirction[sortingFactor] = !gDirction[sortingFactor];
+    renderBooks();
+}
 
 function onReadInfo(el){
-    gCurrBookID = el.parentElement.parentElement.firstElementChild.innerText.trim();
+    var $el; 
+    Boolean(el.length) ? $el = el : $el = $(el);
+    gCurrBookID = +$el.closest('tr').first().children('th').text().trim();
+    console.log($el.closest().children('th'))
     const book = getBookByID(gCurrBookID);
 
     $('.info-panel').removeClass('hide-aside');
@@ -70,10 +78,17 @@ function onReadInfo(el){
     !book.imgUrl? $('.book-cover').attr('src','img/default-cover.png') : $('.book-cover').attr('src',book.imgUrl);
     $('.info-panel .first-letter').text(book.info.charAt(0));
     $('.info-panel .book-info-txt').text(book.info.substring(1));
+
+    setInfoPanelStatus({isOpen: true,bookId: gCurrBookID});
+    _setQueryParams();
 }
+
+
 
 function onCloseInfo() {
     $('.info-panel').addClass('hide-aside');
+    setInfoPanelStatus(null);
+    _setQueryParams();
 }
 
 function onRateChange(el){
@@ -223,6 +238,11 @@ function _loadFromQueryParams(){
         minRate: +paramsStr.get('minRate') || 0
     }
 
+    const status = {
+        isOpen: paramsStr.get('isOpen') || 0,
+        bookId: +paramsStr.get('bookId') || 0
+    }
+
     if (!filter.maxPrice && !filter.minRate){
         renderBooks();
         _changePageProgressionBTNs ();
@@ -239,13 +259,36 @@ function _loadFromQueryParams(){
         $('.min-rate input').val(filter.minRate);
     }
 
-    setCurrentFilter(filter);
-    renderBooks();
+    if (!Boolean(status.isOpen + status.bookId)){
+        setCurrentFilter(filter);
+        renderBooks();
+        return;
+    } else {
+        
+        setInfoPanelStatus(status)
+        setCurrentFilter(filter);
+        
+        
+        renderBooks();
+        const el = $('th.content').toArray().find((node) => +node.innerText.trim() >= status.bookId);
+        onReadInfo(el);
+        console.log(el)
+     
+    }
+
+    
 }
 
 function  _setQueryParams() {
     const filter = getFilter();
-    const paramsStr = `?maxPrice=${filter.maxPrice}&minRate=${filter.minRate}`;
+    const infoStatus = getInfoPanelStatus();
+    var paramsStr;
+    if(Boolean(infoStatus)){
+        paramsStr = `?maxPrice=${filter.maxPrice}&minRate=${filter.minRate}&isOpen=${infoStatus.isOpen}&bookId=${infoStatus.bookId}`;
+    } else {
+        paramsStr = `?maxPrice=${filter.maxPrice}&minRate=${filter.minRate}`;
+    }
+    
     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + paramsStr;
     window.history.pushState({ path: newUrl }, '', newUrl);
 }
@@ -281,10 +324,15 @@ function _changePageProgressionBTNs (){
         if(booksLength <= getDisplayAmount()){
             $('.btn.next').prop( 'disabled', true );
             $('.btn.next').addClass('disabled-btn');
+        } else{
+            if( $('.btn.next').hasClass('disabled-btn')){
+                $('.btn.next').prop( 'disabled', false );
+                $('.btn.next').removeClass('disabled-btn');
+            }
         }
-    } else if((currPageNum + 1) * getDisplayAmount() <= booksLength -1){
-        $('.btn.next').prop( 'disabled', true );
-        $('.btn.next').addClass('disabled-btn');
+    } else if((currPageNum + 1) * getDisplayAmount() <= booksLength){
+        $('.btn.next').prop( 'disabled', false );
+        $('.btn.next').removeClass('disabled-btn');
         if( $('.btn.prev').hasClass('disabled-btn')){
             $('.btn.prev').prop( 'disabled', false );
             $('.btn.prev').removeClass('disabled-btn');
@@ -312,10 +360,11 @@ function _generateTableHTML(){
         for(let i = 0; i < displayLength; i++ ){
             strHTMLs[i] = (`<tr ${_checkOddNum(i) ? 'class="odd-row"' : ''}><th class="content">${books[currPageNum][i].id}
             </th><td class="content">${books[currPageNum][i].name}</td>
-            <td class="content center-txt">${books[currPageNum][i].price}</td>
-            <td class="action-btn"><button class="blue-btn" onclick="onReadInfo(this)">Read</button></td>
-            <td class="action-btn"><button class="orange-btn" onclick="onUpdateBook(this)">Update</button></td>
-            <td class="action-btn"><button onclick="onDeleteBook(this)">Delete</button></td></tr>`);
+            <td class="content center-txt">${books[currPageNum][i].price}</td><td class="content center-txt">
+            ${books[currPageNum][i].rate}</td><td class="action-btn"><button class="blue-btn" 
+            onclick="onReadInfo(this)">Read</button></td><td class="action-btn"><button class="orange-btn" 
+            onclick="onUpdateBook(this)">Update</button></td><td class="action-btn"><button 
+            onclick="onDeleteBook(this)">Delete</button></td></tr>`);
         };
 
     } else if (books[currPageNum].length > 0){
@@ -325,7 +374,7 @@ function _generateTableHTML(){
             if(books[currPageNum][i]){
                 strHTMLs[i] = (`<tr ${_checkOddNum(i) ? 'class="odd-row"' : ''}><th class="content">${books[currPageNum][i].id}
                 </th><td class="content">${books[currPageNum][i].name}</td>
-                <td class="content center-txt">${books[currPageNum][i].price}</td>
+                <td class="content center-txt">${books[currPageNum][i].price}</td><td class="content center-txt">${books[currPageNum][i].rate}</td>
                 <td class="action-btn"><button class="blue-btn" onclick="onReadInfo(this)">Read</button></td>
                 <td class="action-btn"><button class="orange-btn" onclick="onUpdateBook(this)">Update</button>
                 </td><td class="action-btn"><button onclick="onDeleteBook(this)">Delete</button></td></tr>`);
@@ -337,8 +386,9 @@ function _generateTableHTML(){
 
     }
 
-    strHTMLs.unshift(`<table><thead><tr><th>I.D</th><th>Name</th><th>Price</th><th class="actions" colspan="3">
-    Actions</th></tr></thead><tbody>`);
+    strHTMLs.unshift(`<table><thead><tr><th>I.D</th><th class="table-pseudo-btn" onclick="onSortBooks('name')">Name</th>
+    <th class="table-pseudo-btn" onclick="onSortBooks('price')">Price</th><th>Rating</th>
+    <th class="actions" colspan="3">Actions</th></tr></thead><tbody>`); 
     strHTMLs.push(`</tbody></table>`);
 
     return strHTMLs.join('');
@@ -349,8 +399,9 @@ function _getEmptyTableRow(num){
     num = Math.abs(num);
 
     for (let i = 0; i < num; i++) {
-        EmptyRows[i] = `<tr><th class="content"></th><td class="content"></td><td class="content center-txt"><td class="action-btn">
-        </td><td class="action-btn"></td><td class="action-btn"></td></tr>`;
+        EmptyRows[i] = `<tr><th class="content"></th><td class="content"></td><td class="content center-txt">
+        <td class="content center-txt"><td class="action-btn"></td><td class="action-btn"></td></td>
+        <td class="action-btn"></td></tr>`;
     }
 
     return EmptyRows;
