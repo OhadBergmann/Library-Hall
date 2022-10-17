@@ -10,6 +10,7 @@ var gBookId;
 var gViewPreference;
 var gPageNum = 0;
 var gDisplayAmount = 6;
+var gCurrFilter;
 
 if(gDisplayAmount > 6){ gDisplayAmount = 6;}
 
@@ -36,6 +37,37 @@ function getBooks(){
     }
 
     return books;
+}
+
+function getBooksFilterBy(){
+    var books = [];
+    var count = 0;
+
+    const filteredBooks = gBooks.filter(book => +book.price.substring(0,book.price.length -1) <= +gCurrFilter.maxPrice);
+
+    if(filteredBooks.length < 1) return filteredBooks;
+    books[0] = [];
+    books[0][0] = filteredBooks[0];
+
+    for (let i = 1; i < filteredBooks.length; i++) {
+        if(i%gDisplayAmount !== 0){
+            books[count][i%gDisplayAmount] = filteredBooks[i];
+        } else {
+            count++;
+            books[count] = [];
+            books[count][0] = filteredBooks[i];
+        }
+    }
+
+    return books;
+}
+
+function setCurrentFilter (obj){
+    gCurrFilter = obj;
+}
+
+function haveCurrentFilter (){
+     return !gCurrFilter ? false: true
 }
 
 function addNewBook (obj){
@@ -69,10 +101,21 @@ function removeBook(id){
     }
 }
 
+function updateBookRate (id,direction){
+    const currBook = getBookByID(id);
+    if(direction === '+' && currBook.rate < 10){
+        currBook.rate++;
+    } else if(direction === '-' && currBook.rate > 0){
+        currBook.rate--;
+    };
+
+    saveToStorage(BOOKS_KEY, gBooks);
+}
+
 
 function updateBook(data){
     const currBook = getBookByID(data.id);
-    console.log(gBooks);
+
     switch(data.type){
         case 'id':
             currBook.id = +data.updateValue;
@@ -91,8 +134,6 @@ function updateBook(data){
             break;
     }
 
-    console.log(currBook);
-    console.log(gBooks);
     saveToStorage(BOOKS_KEY,gBooks);
 }
 

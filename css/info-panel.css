@@ -124,4 +124,38 @@ span.book-info-txt{
     background-color: #6c4040;
     border-color: #72cad7;
 }
-    
+
+.book-info-set-rate{
+    position: absolute;
+    top: 7.9em;
+    right: 3.1em;
+
+    height: 2em;
+    width: 5em;
+}
+
+.book-info-set-rate button{
+    background-color: #d297c8;
+    height: 2em;
+    width: 2em;
+
+    border: 2px solid #5c4448;
+    border-radius: 2em;
+    margin-left: 0.5em;
+}
+
+.book-info-set-rate button.lower-rate:hover{
+    background-color: #fefefe;
+    cursor: pointer;
+}
+
+.book-info-set-rate button.higher-rate:hover{
+    background-color: #fefefe;
+    cursor: pointer;
+}
+
+
+.book-info-set-rate button:active{
+    background-color: #787878;
+    cursor: progress;
+}

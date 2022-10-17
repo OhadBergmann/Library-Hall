@@ -3,7 +3,6 @@
 
 var gCurrBookID = -1;
 
-
 function onInit(){
     renderBooks();
 }
@@ -30,7 +29,7 @@ function onTablePageChange (isForward){
         setCurrentPageNum(currPageNum);
     }
 
-    document.querySelector('.current-page').innerText = currPageNum;
+    document.querySelector('.current-page').innerText = currPageNum + 1;
     renderBooks();
 }
 
@@ -43,9 +42,17 @@ function onDeleteBook(el){
 }
 
 
+function onSetFilterBy(obj){
+    $('label.filter-price-value').text(obj.maxPrice + '$')
+    setCurrentFilter(obj);
+    renderBooks();
+}
+
+
+
 function onReadInfo(el){
-    const id = el.parentElement.parentElement.firstElementChild.innerText.trim();
-    const book = getBookByID(id);
+    gCurrBookID = el.parentElement.parentElement.firstElementChild.innerText.trim();
+    const book = getBookByID(gCurrBookID);
 
     $('.info-panel').removeClass('hide-aside');
     $('.book-info-name').text(book.name);
@@ -61,7 +68,12 @@ function onCloseInfo() {
     $('.info-panel').addClass('hide-aside');
 }
 
+function onRateChange(el){
+    const direction = $(el).text().trim();
 
+    updateBookRate(gCurrBookID,direction);
+    $('.book-info-rate span').text(getBookByID(gCurrBookID).rate); 
+}
 
 function onUpdateBook(el){
     gCurrBookID = $(el).closest('tr').children('*').first().text()
@@ -72,7 +84,9 @@ function onUpdateBook(el){
 
 }
 
-function onCloseUpdateForm(){
+function onCloseUpdateForm(ev){
+    if(Boolean(ev)) ev.preventDefault();
+
     gCurrBookID = -1;
     const $elForm = $('form[name="form2"] .form-frame');
     $elForm.addClass('op-zero');
@@ -122,7 +136,8 @@ function onUpdateFormSubmition(ev,el){
 
     currData.id = gCurrBookID;
     currData.type = $(el).find('button.active').data().type;
-    currData.updateValue = $('.update-input-container > ').val();
+    currData.updateValue = +$('.update-input-container > ').val() <= +$('.filter-Price-range').val() ? 
+    +$('.update-input-container > ').val() : 1000;
    
     updateBook(currData);
     onCloseUpdateForm();
@@ -239,11 +254,13 @@ function _changePageProgressionBTNs (){
 
 function _generateTableHTML(){
     var strHTMLs = [];
-    var books = getBooks();
+    var books = haveCurrentFilter() ?  getBooksFilterBy() : getBooks();
     const currPageNum = getCurrentPageNum();
     const displayLength = getDisplayAmount();
 
-    if(books[currPageNum].length === displayLength){
+    if(!Boolean(books[currPageNum])){
+        strHTMLs = _getEmptyTableRow(displayLength);
+    } else if(books[currPageNum].length === displayLength){
         
         for(let i = 0; i < displayLength; i++ ){
             strHTMLs[i] = (`<tr ${_checkOddNum(i) ? 'class="odd-row"' : ''}><th class="content">${books[currPageNum][i].id}
@@ -271,8 +288,6 @@ function _generateTableHTML(){
 
         }
 
-    } else {
-        strHTMLs = _getEmptyTableRow(5); 
     }
 
     strHTMLs.unshift(`<table><thead><tr><th>I.D</th><th>Name</th><th>Price</th><th class="actions" colspan="3">
