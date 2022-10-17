@@ -106,9 +106,27 @@ label.current-page{
 
     padding: 5px 15px 5px 15px;
     font-size: 16px;
-    border-radius: .6rem;
-    border-color: 2px solid #0ea6bd;
+    
+    border: 2px solid #0ea6bd;
     box-shadow: 1px 1px 1px 1px #000000;
+}
+
+.page-nav{
+    position: relative;
+    display: inline-block;
+}
+
+.page-nav .current-page{
+    
+    background-color: #acd1d7;
+    border: 2px solid #0ea6bd;
+
+    padding: 0.5em;
+    border-radius: .6rem;
+}
+
+.page-nav .btn{
+    transform: translateY(-0.1em);
 }
 
 .disabled-btn{

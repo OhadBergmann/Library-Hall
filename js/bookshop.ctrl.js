@@ -21,7 +21,7 @@ function renderBooks(){
 function onTablePageChange (isForward){
     var books = getBooks();
     var currPageNum = getCurrentPageNum();
-    const lastPage = +document.querySelector('.current-page').innerText; 
+    const lastPage = +$('.current-page').text(); 
     
     if(isForward && lastPage + 1 <= books.length){
         currPageNum++;
@@ -31,7 +31,7 @@ function onTablePageChange (isForward){
         setCurrentPageNum(currPageNum);
     }
 
-    document.querySelector('.current-page').innerText = currPageNum + 1;
+    $('.current-page').text(currPageNum + 1);
     renderBooks();
 }
 
@@ -338,8 +338,8 @@ function _changePageProgressionBTNs (){
             $('.btn.prev').removeClass('disabled-btn');
         }
     } else {
-        $('.btn.next').prop( 'disabled', false );
-        $('.btn.next').removeClass('disabled-btn');
+        $('.btn.next').prop( 'disabled', true );
+        $('.btn.next').addClass('disabled-btn');
         if( $('.btn.prev').hasClass('disabled-btn')){
             $('.btn.prev').prop( 'disabled', false );
             $('.btn.prev').removeClass('disabled-btn');
